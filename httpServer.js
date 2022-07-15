@@ -10,7 +10,7 @@ const server = http.createServer((req, res) => {
     const match = req.url.match(pattern);
 
     switch (true) {
-        case (req.url === "/pets" && req.method === "GET"):
+        case (req.url === "/pets" && req.method === "GET"): //GET REQUEST FOR ALL PETS
             readFile('pets.json', 'utf-8').then(str => {
                 res.end(str);
             }).catch((err) => {
@@ -18,7 +18,7 @@ const server = http.createServer((req, res) => {
                 res.end("Not Found")
             });
             break;
-        case (match && req.method === "GET"):
+        case (match && req.method === "GET"): //GET REQUEST FOR PET RECORD
             let petIndex = parseInt(match[1]);
             readFile('pets.json', 'utf-8').then(str => {
                 const data = JSON.parse(str);
@@ -26,7 +26,7 @@ const server = http.createServer((req, res) => {
                     res.writeHead(404);
                     res.end("Not Found")
                 } else {
-                    res.end(JSON.stringify(data[petIndex])); //GET RECORD AT INDEX
+                    res.end(JSON.stringify(data[petIndex])); //GET RECORD AT INDEX, SEND TO CLIENT
                 };
             }).catch((err) => {
                 console.error(err);
