@@ -2,7 +2,9 @@
 //SET UP DEPENDENCIES
 
 import express from 'express';
-import { readFile } from "fs/promises";
+import { readPetsFile } from "./shared.js";
+import { writePetsFile } from "./shared.js";
+
 const app = express();
 const PORT = 3030
 
@@ -13,20 +15,18 @@ app.use(express.json());
 
 //HANDLE REQUESTS WITH ROUTES
 app.get('/pets', (req, res, next) => {
-    readFile("../fs-pet-shop/pets.json", "utf-8").then(str => {
-        const data = JSON.parse(str);
-        res.send(data);
+    readPetsFile().then(data => {
+        res.send(JSON.stringify(data));
     }).catch(err => {
+        console.error(err);
         next(err);
     });
 });
 
 
 app.get('/pets/:id', (req, res, next) => {
-    readFile("../fs-pet-shop/pets.json", "utf-8").then(str => {
-        const data = JSON.parse(str);
+    readPetsFile().then(data => {
         const result = data[req.params.id];
-        console.log(result);
         if (result) {
             res.send(result);
         } else {
@@ -45,8 +45,20 @@ app.get('/pets/:id/:name', (req, res) => {
 
 app.post('/pets/post', (req, res) => {
     // console.log(req);
-    res.send(req.body);
+    const newPet = req.body;
+    readPetsFile()
+        .then(data => {
+            //const newPets = data.concat(newPet);
+            data.push(newPet);
+            console.log('newPets: ', data);
+            writePetsFile(data);
+            res.send(JSON.stringify(req.body));
+        }).catch(err => {
+            console.error(err);
+            next(err);
+        });
 });
+
 
 //LISTEN ON A PORT
 app.listen(PORT, function () {
@@ -68,3 +80,5 @@ app.use((err, req, res, next) => {
     res.send(err.statusMessage);
     //res.render('error', { error: err })
 })
+
+export { app };
