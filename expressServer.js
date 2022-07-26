@@ -1,6 +1,7 @@
 
 //SET UP DEPENDENCIES
 
+import bodyParser from 'body-parser';
 import express from 'express';
 import { readPetsFile } from "./shared.js";
 import { writePetsFile } from "./shared.js";
@@ -10,6 +11,8 @@ const PORT = 3030
 
 //MIDDLEWARE MODULES
 app.use(express.json());
+app.use(bodyParser.json());
+app.use(morgan('tiny'));
 
 
 
