@@ -1,4 +1,5 @@
 import { readFile, writeFile } from "fs/promises";
+import postgres from 'postgres';
 
 export const readPetsFile = () => readFile("pets.json", "utf-8").then(str => {
     const data = JSON.parse(str);
@@ -13,6 +14,8 @@ export const writePetsFile = (jsonObj) => {
         return err;
     });
 };
+
+export const sql = postgres();
 
 
 // import { readFile } from 'node:fs';
